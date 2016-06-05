@@ -1,8 +1,8 @@
 import optparse
 import os
 
-from config.paths import TQ_DATASOURCE_UPLOAD_ENDPOINT
-from tqhandler import TranQuant
+from config.config import TQ_DATASOURCE_UPLOAD_ENDPOINT
+from batch.server_handler import TranQuant
 
 if __name__ == '__main__':
     usage = """

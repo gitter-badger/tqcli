@@ -2,7 +2,8 @@ import logging
 import requests
 import ujson
 
-from batch.tqfile import TQFile
+from batch.file_manager import TQFile
+from config.config import DEFAULT_CHUNK_SIZE
 
 LOGGER = logging.getLogger(__name__)
 
@@ -36,7 +37,7 @@ class TranQuant(object):
         self.client = Client(destination_url, token, datasource_id)
 
     def upload(self, input_path):
-        tq_file = TQFile(input_path, chunk_size=10*1000)
+        tq_file = TQFile(input_path, chunk_size=DEFAULT_CHUNK_SIZE)
         if not tq_file.is_valid():
             raise Exception("The file is not valid.")
         self.client.upload_file(tq_file)

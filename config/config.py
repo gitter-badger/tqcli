@@ -4,3 +4,5 @@
 
 TQ_DATASOURCE_META_ENDPOINT = 'http://localhost:8000/api/datasources/datasources/'
 TQ_DATASOURCE_UPLOAD_ENDPOINT = 'http://localhost:9999/api/ingest/datasource/'
+
+DEFAULT_CHUNK_SIZE = 10 * 1000

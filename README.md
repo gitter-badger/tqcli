@@ -30,3 +30,12 @@ To test the package run the mock server that's under tests/
  ```
  python tests/tqserver.py
  ```
+
+
+## The flow
+
+- TQCli starts to read the file in chunks, the size of the chunks is set in `config.py`
+
+- Builds a payload: `{'datasource_id': 'this-is-a-datasource-id', 'from_byte': 0, 'remained_bytes': 0, 'to_byte': 10000, 'chunk': ':"DATA"`
+
+- Makes a POST request to `TQ_DATASOURCE_UPLOAD_ENDPOINT`
