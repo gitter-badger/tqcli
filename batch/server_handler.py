@@ -25,7 +25,6 @@ class Client(object):
                 'remained_bytes': remained_bytes,
                 'datasource_id': self.datasource_id
             }
-            print("PAYLOAD: ", payload)
             self.session.post(self.destination_url, data=ujson.dumps(payload))
 
     def close(self):

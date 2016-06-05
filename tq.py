@@ -5,8 +5,7 @@ from config.config import TQ_DATASOURCE_UPLOAD_ENDPOINT
 from batch.server_handler import TranQuant
 
 if __name__ == '__main__':
-    usage = """
-    """
+    usage = open('README.md', 'r').read()
     parser = optparse.OptionParser(usage)
     parser.add_option(
         '-i', '--input',
