@@ -1,0 +1,8 @@
+Django==1.9.6
+python-dateutil==2.5.3
+pytz==2016.4
+requests==2.10.0
+six==1.10.0
+tornado==4.3
+tzlocal==1.2.2
+ujson==1.35

@@ -1,6 +1,7 @@
 import optparse
 import os
 
+from config.paths import TQ_DATASOURCE_UPLOAD_ENDPOINT
 from tqhandler import TranQuant
 
 if __name__ == '__main__':
@@ -31,8 +32,8 @@ if __name__ == '__main__':
     options, remainder = parser.parse_args()
     base_dir = os.path.dirname(os.path.abspath(__file__))
 
-    tq = TranQuant(token=options.token, datasource_id=options.datasource_id)
-    tq.upload(input=options.input_path)
+    tq = TranQuant(destination_url=TQ_DATASOURCE_UPLOAD_ENDPOINT, token=options.token, datasource_id=options.datasource_id)
+    tq.upload(input_path=options.input_path)
 
 
 
