@@ -14,7 +14,7 @@ class Client(object):
         self.datasource_id = datasource_id
         self.token = token
         self.session = requests.Session()
-        self.session.headers.update({'Token': token})
+        self.session.headers.update({'Token': token, 'Content-Type': 'application/json'})
 
     def upload_file(self, tq_file):
         for from_byte, to_byte, remained_bytes, a_chunk in tq_file.chunks():
@@ -25,7 +25,12 @@ class Client(object):
                 'remained_bytes': remained_bytes,
                 'datasource_id': self.datasource_id
             }
-            self.session.post(self.destination_url, data=ujson.dumps(payload))
+
+            #print(ujson.dumps(payload))
+
+            response = self.session.post(self.destination_url, data=ujson.dumps(payload))
+
+            print(response.content)
 
     def close(self):
         self.session.close()
