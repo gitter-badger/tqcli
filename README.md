@@ -17,7 +17,7 @@ Setup and activate virtualenv:
 
 ```
 virtualenv ~/.virtualenvs/tqcli
-source ~/.virtualenv/tqcli/bin/activate
+source ~/.virtualenvs/tqcli/bin/activate
 ```
 
 Install dependencies:
