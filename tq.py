@@ -1,7 +1,7 @@
 import optparse
 import os
 
-from config.config import TQ_DATASOURCE_UPLOAD_ENDPOINT
+from config.config import TQ_API_ROOT_URL
 from batch.server_handler import TranQuant
 
 if __name__ == '__main__':
@@ -28,23 +28,19 @@ if __name__ == '__main__':
         help='DataSource ID.',
     )
 
+    parser.add_option(
+        "-s", "--dataset-id",
+        dest='dataset_id',
+        default='',
+        help='DataSet ID.',
+    )
+
     options, remainder = parser.parse_args()
     base_dir = os.path.dirname(os.path.abspath(__file__))
 
-    tq = TranQuant(destination_url=TQ_DATASOURCE_UPLOAD_ENDPOINT, token=options.token, datasource_id=options.datasource_id)
+    tq = TranQuant(
+        root_url=TQ_API_ROOT_URL, 
+        token=options.token, 
+        datasource_id=options.datasource_id,
+        dataset_id=options.dataset_id)
     tq.upload(input_path=options.input_path)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
