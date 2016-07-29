@@ -39,6 +39,9 @@ class TQFile(object):
         self.chunk_size = chunk_size
         self.index = 0
 
+    def filename(self):
+        return os.path.basename(self.path)
+
     def is_valid(self):
         return all(
             [
