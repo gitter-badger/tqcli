@@ -27,7 +27,9 @@ class Client(object):
 
     def upload_file_in_parts(self, tq_file):
         filename = tq_file.filename()
-        upload_id = self.initiate_multipart_upload(filename)
+        file_and_upload_id = self.initiate_multipart_upload(filename)
+        upload_id = file_and_upload_id["upload_id"]
+        self.dataset_id = file_and_upload_id['file']['dataset_id']
         part_tags = [self.upload_part(upload_id, bytes_to_be_read, chunk_iterator, a_chunk, filename) 
             for chunk_iterator, bytes_to_be_read, from_byte, to_byte, remained_bytes, a_chunk in tq_file.chunks()]
         self.upload_complete(upload_id, part_tags, filename)
@@ -36,12 +38,11 @@ class Client(object):
         url = self.root_url + Client.endpoints['initiate']
         payload = {
           'datasource_id': self.datasource_id,
-          'dataset_id': self.dataset_id,
           'filename': filename
         }
         response = self.session.post(url, data=ujson.dumps(payload))
         print(response.content)
-        return response.content
+        return ujson.loads(response.content)
 
     def upload_part(self, upload_id, part_size, part_number, part, filename):
         url = self.root_url + Client.endpoints['part']
