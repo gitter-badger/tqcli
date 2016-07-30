@@ -11,10 +11,9 @@ LOGGER = logging.getLogger(__name__)
 
 class Client(object):
     endpoints = {
-        'datasource': '/ingest/datasource/upload/',
-        'initiate': '/ingest/datasource/multipart/initiate/',
-        'part': '/ingest/datasource/multipart/part/',
-        'complete': '/ingest/datasource/multipart/complete/',
+        'initiate': '/upload/initiate/',
+        'part': '/upload/part/',
+        'complete': '/upload/complete/'
     }
 
     def __init__(self, root_url, token, datasource_id, dataset_id):
@@ -23,15 +22,15 @@ class Client(object):
         self.dataset_id = dataset_id
         self.token = token
         self.session = requests.Session()
-        self.session.headers.update({'Token': token, 'Content-Type': 'application/json'})
+        self.session.headers.update({'Authorization': 'token token="%s"' % self.token, 'Content-Type': 'application/json'})
 
     def upload_file_in_parts(self, tq_file):
         filename = tq_file.filename()
         file_and_upload_id = self.initiate_multipart_upload(filename)
         upload_id = file_and_upload_id["upload_id"]
         self.dataset_id = file_and_upload_id['file']['dataset_id']
-        part_tags = [self.upload_part(upload_id, bytes_to_be_read, chunk_iterator, a_chunk, filename) 
-            for chunk_iterator, bytes_to_be_read, from_byte, to_byte, remained_bytes, a_chunk in tq_file.chunks()]
+        part_tags = [self.upload_part(upload_id, bytes_to_be_read, chunk_iterator, a_chunk, filename, total_chunks) 
+            for chunk_iterator, bytes_to_be_read, from_byte, to_byte, remained_bytes, a_chunk, total_chunks in tq_file.chunks()]
         self.upload_complete(upload_id, part_tags, filename)
 
     def initiate_multipart_upload(self, filename):
@@ -41,10 +40,14 @@ class Client(object):
           'filename': filename
         }
         response = self.session.post(url, data=ujson.dumps(payload))
-        print(response.content)
+        #print(response.content)
+        #print(response.status_code)
+        if response.status_code == 401:
+            raise Exception("Authentication Failed.  Token is invalid.")
+        print("Initiated upload")
         return ujson.loads(response.content)
 
-    def upload_part(self, upload_id, part_size, part_number, part, filename):
+    def upload_part(self, upload_id, part_size, part_number, part, filename, total_parts):
         url = self.root_url + Client.endpoints['part']
         payload = {
             'file': {
@@ -57,14 +60,15 @@ class Client(object):
             'part_size': part_size,
             'base64_part': base64.b64encode(part)
         }
-        print('upload_part part_number: %s, part_size: %s' % (payload['part_number'], payload['part_size']))
+        print("Uploading part %s of %s (%s bytes)" % (part_number, total_parts, part_size))
+        #print('upload_part part_number: %s, part_size: %s' % (payload['part_number'], payload['part_size']))
         response = self.session.post(url, data=ujson.dumps(payload))
-        print(response.content)
+        #print(response.content)
         return ujson.loads(response.content)
 
     def upload_complete(self, upload_id, part_tags, filename):
         url = self.root_url + Client.endpoints['complete']
-        print('part_tags: %s' % (part_tags) )
+        #print('part_tags: %s' % (part_tags) )
         payload = {
             'file': {
                 'datasource_id': self.datasource_id,
@@ -74,9 +78,11 @@ class Client(object):
             'upload_id': upload_id,
             'part_tags': part_tags
         }
-        print('upload_complete payload %s' % (ujson.dumps(payload)))
+        #print('upload_complete payload %s' % (ujson.dumps(payload)))
         response = self.session.post(url, data=ujson.dumps(payload))
-        print(response.content)
+        #print(response.content)
+        if response.status_code == 200:
+            print("Upload complete!")
 
     def close(self):
         self.session.close()

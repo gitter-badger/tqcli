@@ -51,6 +51,7 @@ class TQFile(object):
         )
 
     def chunks(self):
+        total_chunks = int(self.size/self.chunk_size)+1
         chunk_iterator = 0
         bytes_read = 0
         while bytes_read < self.size:
@@ -61,7 +62,7 @@ class TQFile(object):
             bytes_read += bytes_to_be_read
             to_byte = bytes_read
             remained_bytes = self.size - bytes_read
-            yield chunk_iterator, bytes_to_be_read, from_byte, to_byte, remained_bytes, a_chunk
+            yield chunk_iterator, bytes_to_be_read, from_byte, to_byte, remained_bytes, a_chunk, total_chunks
 
     def is_readable(self, path):
         """

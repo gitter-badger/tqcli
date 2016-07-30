@@ -27,8 +27,21 @@ pip install -r requirements.txt
 
 ## Usage
 
+Upload a new dataset to an existing datasouce
+
 ```
-python tq.py --input <dataset.file> --token <user-token> --datasource-id <datasource-id> --dataset-id <dataset-id>
+python tq.py --input <dataset.file> --token <user-token> --datasource-id <datasource-id>
+```
+
+ex)
+
+```
+$ python tq.py --input data\all-shakespeare.txt --token SECRET_TOKEN --datasource-id 524b0f9f-d829-4ea7-8e62-e06d21b3dd13
+Initiated upload
+Uploading part 1 of 2 (5242880 bytes)
+Uploading part 2 of 2 (99881 bytes)
+Upload complete!
+
 ```
 
 ## The flow
