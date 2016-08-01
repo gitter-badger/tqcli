@@ -1,11 +1,12 @@
 import optparse
 import os
+import sys
 
 from config.config import TQ_API_ROOT_URL
 from batch.server_handler import TranQuant
 
 if __name__ == '__main__':
-    usage = open('README.md', 'r').read()
+    usage = open(os.path.join(sys.path[0], 'README.md'), 'r').read()
     parser = optparse.OptionParser(usage)
     parser.add_option(
         '-i', '--input',

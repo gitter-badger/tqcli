@@ -40,11 +40,11 @@ class Client(object):
           'filename': filename
         }
         response = self.session.post(url, data=ujson.dumps(payload))
-        #print(response.content)
+        print('initiated upload response' + response.content)
         #print(response.status_code)
         if response.status_code == 401:
             raise Exception("Authentication Failed.  Token is invalid.")
-        print("Initiated upload")
+        #print("Initiated upload")
         return ujson.loads(response.content)
 
     def upload_part(self, upload_id, part_size, part_number, part, filename, total_parts):
@@ -63,7 +63,7 @@ class Client(object):
         print("Uploading part %s of %s (%s bytes)" % (part_number, total_parts, part_size))
         #print('upload_part part_number: %s, part_size: %s' % (payload['part_number'], payload['part_size']))
         response = self.session.post(url, data=ujson.dumps(payload))
-        #print(response.content)
+        #print('part upload response' + response.content)
         return ujson.loads(response.content)
 
     def upload_complete(self, upload_id, part_tags, filename):
@@ -80,7 +80,7 @@ class Client(object):
         }
         #print('upload_complete payload %s' % (ujson.dumps(payload)))
         response = self.session.post(url, data=ujson.dumps(payload))
-        #print(response.content)
+        #print('upload complete response' + response.content)
         if response.status_code == 200:
             print("Upload complete!")
 
