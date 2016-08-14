@@ -40,7 +40,7 @@ class Client(object):
           'filename': filename
         }
         response = self.session.post(url, data=ujson.dumps(payload))
-        print('initiated upload response' + response.content)
+        print('initiated upload response ' + str(response.content))
         #print(response.status_code)
         if response.status_code == 401:
             raise Exception("Authentication Failed.  Token is invalid.")
