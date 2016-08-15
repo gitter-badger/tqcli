@@ -1,9 +1,13 @@
 import requests
 import ujson
 import base64
+import os
+import logging
 
 from tqcli.batch.file_manager import TQFile
-from tqcli.config.config import logger, DEFAULT_CHUNK_SIZE
+from tqcli.config.config import DEFAULT_CHUNK_SIZE
+
+logger = logging.getLogger(os.path.basename(__file__))
 
 
 class Client(object):
@@ -26,7 +30,7 @@ class Client(object):
         file_and_upload_id = self.initiate_multipart_upload(filename)
         upload_id = file_and_upload_id["upload_id"]
         self.dataset_id = file_and_upload_id['file']['dataset_id']
-        part_tags = [self.upload_part(upload_id, bytes_to_be_read, chunk_iterator, a_chunk, filename, total_chunks) 
+        part_tags = [self.upload_part(upload_id, bytes_to_be_read, chunk_iterator, a_chunk, filename, total_chunks)
             for chunk_iterator, bytes_to_be_read, from_byte, to_byte, remained_bytes, a_chunk, total_chunks in tq_file.chunks()]
         self.upload_complete(upload_id, part_tags, filename)
 
@@ -57,7 +61,11 @@ class Client(object):
         }
         logger.info("Uploading part %s of %s (%s bytes)" % (part_number, total_parts, part_size))
         response = self.session.post(url, data=ujson.dumps(payload))
-        return ujson.loads(response.content)
+        if response.status_code == 200:
+            return ujson.loads(response.content)
+        else:
+            logger.debug(response.content)
+            raise Exception('Failed to upload part - Response Status: %d' % response.status_code)
 
     def upload_complete(self, upload_id, part_tags, filename):
         url = self.root_url + Client.endpoints['complete']
@@ -73,6 +81,9 @@ class Client(object):
         response = self.session.post(url, data=ujson.dumps(payload))
         if response.status_code == 200:
             logger.info("Upload complete!")
+        else:
+            logger.debug(response.content)
+            raise Exception('Status code of upload confirmation is %d' % response.status_code)
 
     def close(self):
         self.session.close()
@@ -87,3 +98,16 @@ class TranQuant(object):
         if not tq_file.is_valid():
           raise Exception("The file is not valid.")
         self.client.upload_file_in_parts(tq_file)
+
+    def is_valid(self):
+        if not self.client.datasource_id:
+            logger.debug(self.client.__dict__)
+            raise Exception('Data Source ID is not provided.')
+
+        if not self.client.dataset_id:
+            logger.debug(self.client.__dict__)
+            raise Exception('Data Set ID is not provided.')
+
+        if not self.client.token:
+            logger.debug(self.client.__dict__)
+            raise Exception('Authentication Token is not provided.')

@@ -4,9 +4,12 @@ import os
 import stat
 import sys
 import errno
+import logging
+
 from datetime import datetime
 from dateutil.tz import tzutc, PY3
 
+logger = logging.getLogger(os.path.basename(__file__))
 
 class TQFile(object):
     HUMANIZE_SUFFIXES = ('KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB')

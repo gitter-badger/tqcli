@@ -13,7 +13,7 @@ setup(
     install_requires=requirements,
     # entry_points={'console_scripts': ['tqcli=my_python_package.module:function']}
     entry_points={'console_scripts': ['tqcli=tqcli.tqcli:main']},
+    package_dir={'tqcli': 'tqcli'},
     packages=['tqcli', 'tqcli.batch', 'tqcli.config'],
-    data_files=[('', ['README.md', 'requirements.txt']),],
     zip_safe=True
 )
