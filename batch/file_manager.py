@@ -6,6 +6,7 @@ import sys
 import errno
 from datetime import datetime
 from dateutil.tz import tzutc, PY3
+from config.config import logger
 
 
 class TQFile(object):
@@ -112,8 +113,7 @@ class TQFile(object):
         try:
             stats = os.stat(path)
         except IOError as e:
-            raise ValueError('Could not retrieve file stat of "%s": %s' % (
-                path, e))
+            raise ValueError('Could not retrieve file stat of "%s": %s' % (path, e))
 
         try:
             update_time = datetime.fromtimestamp(stats.st_mtime, tzlocal.get_localzone())
@@ -227,6 +227,4 @@ class TQFile(object):
             # Only raise a more explicit exception when it is a permission issue.
             if e.errno != errno.EPERM:
                 raise e
-            raise Exception(
-                ("The file was downloaded, but attempting to modify the "
-                 "utime of the file failed. Is the file owned by another user?"))
+            raise Exception("The file was downloaded, but attempting to modify the utime of the file failed. Is the file owned by another user?")
