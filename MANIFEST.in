@@ -1,0 +1,4 @@
+include *.txt
+include *.md
+recursive-include batch *.md
+recursive-include config *.md

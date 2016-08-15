@@ -11,6 +11,9 @@ setup(
     author_email='mehrdad@tranquant.com',
     license='Apache 2.0',
     install_requires=requirements,
-    packages=['tqcli', 'tqcli/batch', 'tqcli/config'],
+    # entry_points={'console_scripts': ['tqcli=my_python_package.module:function']}
+    entry_points={'console_scripts': ['tqcli=tqcli.tqcli:main']},
+    packages=['tqcli', 'tqcli.batch', 'tqcli.config'],
+    data_files=[('', ['README.md', 'requirements.txt']),],
     zip_safe=True
 )

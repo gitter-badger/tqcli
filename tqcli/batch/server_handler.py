@@ -1,11 +1,9 @@
-import logging
 import requests
 import ujson
 import base64
 
-from batch.file_manager import TQFile
-from config.config import DEFAULT_CHUNK_SIZE
-from config.config import logger
+from tqcli.batch.file_manager import TQFile
+from tqcli.config.config import logger, DEFAULT_CHUNK_SIZE
 
 
 class Client(object):

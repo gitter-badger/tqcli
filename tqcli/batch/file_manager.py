@@ -6,7 +6,6 @@ import sys
 import errno
 from datetime import datetime
 from dateutil.tz import tzutc, PY3
-from config.config import logger
 
 
 class TQFile(object):

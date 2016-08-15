@@ -2,12 +2,11 @@ import optparse
 import os
 import sys
 
-from config.config import TQ_API_ROOT_URL
-from batch.server_handler import TranQuant
+from tqcli.config.config import TQ_API_ROOT_URL, logger
+from tqcli.batch.server_handler import TranQuant
 
-from config.config import logger
 
-if __name__ == '__main__':
+def main():
     usage = open(os.path.join(sys.path[0], 'README.md'), 'r').read()
     parser = optparse.OptionParser(usage)
     parser.add_option(
@@ -40,11 +39,9 @@ if __name__ == '__main__':
 
     options, remainder = parser.parse_args()
 
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-
     tq = TranQuant(
-        root_url=TQ_API_ROOT_URL, 
-        token=options.token, 
+        root_url=TQ_API_ROOT_URL,
+        token=options.token,
         datasource_id=options.datasource_id,
         dataset_id=options.dataset_id
     )
@@ -53,3 +50,6 @@ if __name__ == '__main__':
     except Exception as ex:
         logger.exception(ex)
         logger.error(ex)
+
+if __name__ == '__main__':
+    main()
