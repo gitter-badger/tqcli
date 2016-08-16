@@ -12,6 +12,8 @@
 
 ## Setup
 
+[![Join the chat at https://gitter.im/tqcli/Lobby](https://badges.gitter.im/tqcli/Lobby.svg)](https://gitter.im/tqcli/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Setup and activate virtualenv:
 
 ```
