@@ -43,7 +43,7 @@ class Client(object):
         response = self.session.post(url, data=ujson.dumps(payload))
         logger.info('Initiated upload response ' + str(response.content))
         if response.status_code == 401:
-            raise Exception("Authentication Failed.  Token is invalid.")
+            raise Exception("We could not authenticate :( your token doesn't seem to be valid!")
         return ujson.loads(response.content)
 
     def upload_part(self, upload_id, part_size, part_number, part, filename, total_parts):
@@ -80,7 +80,7 @@ class Client(object):
         }
         response = self.session.post(url, data=ujson.dumps(payload))
         if response.status_code == 200:
-            logger.info("Upload complete!")
+            logger.info("Yes! Upload completed!")
         else:
             logger.debug(response.content)
             raise Exception('Status code of upload confirmation is %d' % response.status_code)
@@ -96,18 +96,18 @@ class TranQuant(object):
     def upload(self, input_path):
         tq_file = TQFile(input_path, chunk_size=DEFAULT_CHUNK_SIZE)
         if not tq_file.is_valid():
-          raise Exception("The file is not valid.")
+          raise Exception("This file does not seem to be valid!")
         self.client.upload_file_in_parts(tq_file)
 
     def is_valid(self):
         if not self.client.datasource_id:
             logger.debug(self.client.__dict__)
-            raise Exception('Data Source ID is not provided.')
+            raise Exception('You forgot to provide Data Source ID :)')
 
         if not self.client.dataset_id:
             logger.debug(self.client.__dict__)
-            raise Exception('Data Set ID is not provided.')
+            raise Exception('You forgot to provide Data Set ID :)')
 
         if not self.client.token:
             logger.debug(self.client.__dict__)
-            raise Exception('Authentication Token is not provided.')
+            raise Exception('You forgot to provide a valid Token ID :)')
